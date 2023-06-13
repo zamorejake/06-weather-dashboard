@@ -49,7 +49,7 @@ cityHistory.addEventListener("click", function (e) {
 });
 function findCity() {
   let city = cityValue.value;
-  let cityFinder = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${key}`;
+  let cityFinder = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${key}`;
   console.log(cityFinder);
   cityValue.value = "";
 
@@ -102,7 +102,7 @@ function generateContent(city, date, weatherDesc, weatherIcon, tempF, humidity, 
     return `
       <divcurrent style="border: 0.1em solid black;">
         <h2>${city} (${date})</h2>
-        <img src="http://openweathermap.org/img/wn/${weatherIcon}@2x.png" alt="${weatherDesc}">
+        <img src="https://openweathermap.org/img/wn/${weatherIcon}@2x.png" alt="${weatherDesc}">
         <p>Temp: ${tempF}°F</p>
         <p>Humidity: ${humidity}%</p>
         <p>Wind Speed: ${windSpeed}mph</p>
