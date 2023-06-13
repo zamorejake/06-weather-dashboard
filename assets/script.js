@@ -7,19 +7,18 @@ var currentCityList = JSON.parse(localStorage.getItem("cityInput"));
 document.addEventListener("DOMContentLoaded", function () {
   let container = document.createElement("h4");
   container.setAttribute("id", "cityList");
-  if (!currentCityList){
-    return
+  if (!currentCityList) {
+    return;
   } else {
     currentCityList.forEach(function (city) {
-        let container = document.createElement("span");
-        container.textContent = `${city} `;
-        cityHistory.appendChild(container);
-      });
+      let container = document.createElement("span");
+      container.textContent = `${city} `;
+      cityHistory.appendChild(container);
+    });
   }
 });
 
-submitButton.addEventListener("click", function (e) {
-  e.preventDefault();
+function search() {
   let city = cityValue.value;
   let container = document.createElement("span");
   let currentCityList = JSON.parse(localStorage.getItem("cityInput"));
@@ -35,12 +34,17 @@ submitButton.addEventListener("click", function (e) {
   container.textContent = city;
   cityHistory.appendChild(container);
   findCity();
+}
+submitButton.addEventListener("click", function (e) {
+  e.preventDefault();
+  search();
 });
 
 cityHistory.addEventListener("click", function (e) {
   e.stopPropagation();
   let displayCity = e.target.textContent;
   cityValue.value = displayCity;
+  search();
 });
 function findCity() {
   let city = cityValue.value;
@@ -53,23 +57,35 @@ function findCity() {
       return response.json();
     })
     .then((data) => {
-      var name = data[0].name;
       var lat = data[0].lat;
       var lon = data[0].lon;
-      return {name, lat, lon};
+      return { lat, lon };
     })
     .then((locData) => {
-        findWeather(locData.lat, locData.lon);
-      });
+      findWeather(locData.lat, locData.lon);
+    });
 }
-async function findWeather(lat,lon) {
-    var weatherReport = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${key}`;
-    fetch(weatherReport)
+async function findWeather(lat, lon) {
+  var weatherReport = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&cnt=1&appid=${key}`;
+  fetch(weatherReport)
     .then((info) => {
       return info.json();
     })
-    .then((week) => {
-        console.log(week);
-      })
+    .then((weather) => {
+      const city = weather.name;
+      const date = new Date(weather.dt * 1000);
+      const weatherDesc = weather.weather[0].description;
+      const tempK = weather.main.temp;
+      const tempF = Math.round((tempK - 273.15) * 9/5 + 32);
+      const humidity = weather.main.humidity;
+      const windSpeed = weather.wind.speed;
+      return {city, date, weatherDesc, tempF, humidity, windSpeed}
+    })
+    .then((vars) => {
+      generateContent(vars.city, vars.date, vars.weatherDesc, vars.tempF, vars.humidity, vars.windSpeed)
+    });
 }
 
+function generateContent(city, date, weatherDesc, tempF, humidity, windSpeed) {
+
+}
