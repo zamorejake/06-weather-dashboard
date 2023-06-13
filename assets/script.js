@@ -4,6 +4,7 @@ var cityValue = document.getElementById("search");
 var content = document.getElementById("content");
 var contentFuture = document.getElementById("contentFuture");
 let cityHistory = document.getElementById("cityHistory");
+let cityHistoryClear = document.getElementById("cityHistoryClear");
 var currentCityList = JSON.parse(localStorage.getItem("cityInput"));
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -48,6 +49,12 @@ cityHistory.addEventListener("click", function (e) {
   cityValue.value = displayCity;
   findCity();
 });
+
+cityHistoryClear.addEventListener("click", function (e) {
+  e.stopPropagation();
+  localStorage.removeItem('cityInput');
+});
+
 function findCity() {
   let city = cityValue.value;
   let cityFinder = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${key}`;
